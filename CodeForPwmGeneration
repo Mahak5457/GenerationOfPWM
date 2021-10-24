@@ -1,0 +1,36 @@
+int freq;
+int duty;
+int Time;
+int timeHigh;
+int timeLow;
+
+void setup() {
+
+  DDRD = DDRD | B11111100;  
+                   
+  Serial.begin(9600);
+  Serial.println("Enter the frequency of the PWM signals: ");
+while (Serial.available() == 0);
+freq = Serial.parseInt();
+Serial.println(freq);
+Serial.println("Enter the duty cycle of the PWM signals: ");
+while (Serial.available() == 0);
+duty = Serial.parseInt();
+Serial.println(duty);
+}
+
+void loop() {
+
+  int timePassed = millis();
+  Time = 1/freq;
+  timeHigh = (duty/100)*Time;
+  timeLow = Time - timeHigh;
+while((millis()-timePassed)*1000 != timeHigh)
+{
+   PORTD = B10101000; // sets digital pins 7,5,3 HIGH
+}
+while((millis()-timePassed)*1000 != timeLow)
+{
+  PORTD = B00000000;
+}
+}
